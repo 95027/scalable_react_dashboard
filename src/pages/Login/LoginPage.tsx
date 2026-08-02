@@ -1,4 +1,27 @@
+import React, { useState } from "react";
+
+type LoginFormData = {
+  email: string;
+  password: string
+}
+
 const LoginPage = () => {
+  const [formData, setFormData] = useState<LoginFormData>({
+    email: "",
+    password: "",
+  });
+
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const submitHandler = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formData);
+
+
+  };
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md rounded-xl border border-border bg-card p-8 shadow-lg">
@@ -10,7 +33,7 @@ const LoginPage = () => {
           </p>
         </div>
 
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={submitHandler}>
           <div>
             <label
               htmlFor="email"
@@ -26,6 +49,9 @@ const LoginPage = () => {
               placeholder="admin@example.com"
               className="w-full rounded-md border border-input bg-surface px-4 py-3 text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring"
               autoComplete="email"
+              onChange={onChangeHandler}
+              value={formData.email}
+              required
             />
           </div>
 
@@ -44,6 +70,9 @@ const LoginPage = () => {
               placeholder="Enter your password"
               className="w-full rounded-md border border-input bg-surface px-4 py-3 text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring"
               autoComplete="current-password"
+              value={formData.password}
+              onChange={onChangeHandler}
+              required
             />
           </div>
           <button
