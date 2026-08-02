@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import authService from "../../services/auth.service";
+import { useNavigate } from "react-router-dom";
 
 type LoginFormData = {
   email: string;
-  password: string
+  password: string;
 }
 
 const LoginPage = () => {
@@ -10,14 +12,28 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const submitHandler = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    setIsLoading(true);
+
+    try {
+      const res = await authService.login(formData);
+      if (res.data.success) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.log("Something went wrong. Please try again.");
+
+    } finally {
+      setIsLoading(false);
+    }
 
 
   };
@@ -77,9 +93,11 @@ const LoginPage = () => {
           </div>
           <button
             type="submit"
-            className="w-full cursor-pointer rounded-md bg-primary py-3 font-semibold text-primary-foreground transition hover:opacity-95 active:scale-[0.99]"
+            className="w-full cursor-pointer rounded-md bg-primary py-3 font-semibold text-primary-foreground transition hover:opacity-95 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={isLoading}
           >
-            Sign In
+            {isLoading ? 'Signing in...' : 'Sign In'}
+
           </button>
         </form>
       </div>
