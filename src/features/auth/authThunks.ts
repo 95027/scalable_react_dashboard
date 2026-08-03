@@ -8,7 +8,11 @@ export const checkAuth = createAsyncThunk(
       const response = await authService.getAuthUser();
       return response.data.data;
     } catch (error: any) {
-      rejectWithValue(error.response?.data?.message || "Authentication failed");
+      return rejectWithValue(
+        error.response?.data?.message ??
+          error.message ??
+          "Authentication failed",
+      );
     }
   },
 );
