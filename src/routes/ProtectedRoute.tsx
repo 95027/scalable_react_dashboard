@@ -3,7 +3,7 @@ import { useAppSelector } from "../hooks/redux"
 
 
 const ProtectedRoute = () => {
-    const { isAuthenticated } = useAppSelector((state) => state.auth);
+    const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
     if (!isAuthenticated) {
         return <Navigate to="/login" replace />

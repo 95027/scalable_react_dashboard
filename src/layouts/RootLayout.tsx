@@ -7,7 +7,7 @@ import LoadingScreen from "../components/common/LoadingScreen";
 const RootLayout = () => {
 
     const dispatch = useAppDispatch();
-    const { isLoading } = useAppSelector((state) => state.auth);
+    const isLoading = useAppSelector((state) => state.auth.isLoading);
 
     useEffect(() => {
         dispatch(checkAuth());
