@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import authService from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { getErrorMessage } from "../../utils/error";
+import { useAppDispatch } from "../../hooks/redux";
+import { checkAuth } from "../../features/auth/authThunks";
 
 type LoginFormData = {
   email: string;
@@ -14,6 +18,7 @@ const LoginPage = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -26,10 +31,12 @@ const LoginPage = () => {
     try {
       const res = await authService.login(formData);
       if (res.data.success) {
-        navigate("/dashboard");
+        await dispatch(checkAuth()).unwrap();
+        toast.success("Login successful...");
+        navigate("/");
       }
     } catch (error) {
-      console.log("Something went wrong. Please try again.");
+      toast.error(getErrorMessage(error));
 
     } finally {
       setIsLoading(false);
