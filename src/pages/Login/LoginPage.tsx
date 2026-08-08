@@ -13,8 +13,8 @@ type LoginFormData = {
 
 const LoginPage = () => {
   const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
+    email: "admin@example.com",
+    password: "password",
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();

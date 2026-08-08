@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { AuthState } from "./auth.types";
-import { checkAuth } from "./authThunks";
+import { checkAuth, logout } from "./authThunks";
 
 const initialState: AuthState = {
   user: null,
@@ -15,6 +15,7 @@ const authSlice = createSlice({
     clearUser(state) {
       state.user = null;
       state.isAuthenticated = false;
+      state.isLoading = false;
     },
   },
   extraReducers: (builder) => {
@@ -28,6 +29,11 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(checkAuth.rejected, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+        state.isLoading = false;
+      })
+      .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
         state.isLoading = false;

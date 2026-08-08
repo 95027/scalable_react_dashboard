@@ -9,6 +9,8 @@ interface ConfirmDialogProps {
     confirmText?: string;
     cancelText?: string;
     onConfirm: () => void;
+    isLoading?: boolean;
+    confirmLoadingText?: string;
 }
 
 const ConfirmDialog = ({
@@ -19,6 +21,8 @@ const ConfirmDialog = ({
     confirmText = "Confirm",
     cancelText = "Cancel",
     onConfirm,
+    isLoading = false,
+    confirmLoadingText = "Processing..."
 }: ConfirmDialogProps) => {
     return (
         <AlertDialog.Root
@@ -77,8 +81,9 @@ const ConfirmDialog = ({
                                 type="button"
                                 onClick={onConfirm}
                                 className="rounded-md bg-danger px-4 py-2 text-sm font-medium text-danger-foreground transition hover:opacity-90"
+                                disabled={isLoading}
                             >
-                                {confirmText}
+                                {isLoading ? confirmLoadingText : confirmText}
                             </button>
                         </AlertDialog.Action>
                     </div>

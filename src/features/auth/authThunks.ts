@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../../services/auth.service";
+import { getErrorMessage } from "../../utils/error";
 
 export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
@@ -7,12 +8,19 @@ export const checkAuth = createAsyncThunk(
     try {
       const response = await authService.getAuthUser();
       return response.data.data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message ??
-          error.message ??
-          "Authentication failed",
-      );
+    } catch (error: unknown) {
+      return rejectWithValue(getErrorMessage(error));
+    }
+  },
+);
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (__, { rejectWithValue }) => {
+    try {
+      await authService.logout();
+    } catch (error: unknown) {
+      return rejectWithValue(getErrorMessage(error));
     }
   },
 );
