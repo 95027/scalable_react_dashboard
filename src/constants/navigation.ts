@@ -1,14 +1,18 @@
 import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
+  Bell,
   Box,
   Car,
   ClipboardList,
   LayoutDashboard,
   MapPin,
   Settings,
-  Store,
+  ShieldCheck,
+  Truck,
+  UserCog,
   Users,
+  Warehouse,
 } from "lucide-react";
 
 export interface NavigationLink {
@@ -37,19 +41,41 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     icon: ClipboardList,
     children: [
       {
-        label: "Orders",
-        href: "/orders",
-        icon: ClipboardList,
-      },
-      {
         label: "Shipments",
         href: "/shipments",
         icon: Box,
       },
       {
-        label: "Delivery Tracking",
+        label: "Deliveries",
+        href: "/deliveries",
+        icon: Truck,
+      },
+      {
+        label: "Tracking",
         href: "/tracking",
         icon: MapPin,
+      },
+    ],
+  },
+
+  {
+    label: "People",
+    icon: Users,
+    children: [
+      {
+        label: "Customers",
+        href: "/customers",
+        icon: Users,
+      },
+      {
+        label: "Drivers",
+        href: "/drivers",
+        icon: UserCog,
+      },
+      {
+        label: "Staff",
+        href: "/staff",
+        icon: UserCog,
       },
     ],
   },
@@ -59,11 +85,6 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     icon: Car,
     children: [
       {
-        label: "Drivers",
-        href: "/drivers",
-        icon: Users,
-      },
-      {
         label: "Vehicles",
         href: "/vehicles",
         icon: Car,
@@ -72,25 +93,42 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   },
 
   {
-    label: "Partners",
-    icon: Store,
+    label: "Infrastructure",
+    icon: Warehouse,
     children: [
       {
-        label: "Vendors",
-        href: "/vendors",
-        icon: Store,
+        label: "Warehouses",
+        href: "/warehouses",
+        icon: Warehouse,
       },
     ],
   },
 
   {
-    label: "Analytics",
+    label: "Management",
     icon: BarChart3,
     children: [
       {
         label: "Reports",
         href: "/reports",
         icon: BarChart3,
+      },
+      {
+        label: "Notifications",
+        href: "/notifications",
+        icon: Bell,
+      },
+    ],
+  },
+
+  {
+    label: "Administration",
+    icon: UserCog,
+    children: [
+      {
+        label: "Roles & Permissions",
+        href: "/roles-permissions",
+        icon: ShieldCheck,
       },
     ],
   },
