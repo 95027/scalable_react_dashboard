@@ -1,12 +1,12 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import { ChevronDown, LogOut, Settings, User } from "lucide-react"
-import ConfirmDialog from "../ui/ConfirmDialog"
+import ConfirmDialog from "../../ui/ConfirmDialog"
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { logout } from "../../features/auth/authThunks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
+import { logout } from "../../../features/auth/authThunks";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { getErrorMessage } from "../../utils/error";
+import { getErrorMessage } from "../../../utils/error";
 
 const UserDropdown = () => {
 
