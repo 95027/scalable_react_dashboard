@@ -4,9 +4,10 @@ import {
     Sun,
 } from "lucide-react";
 import UserDropdown from "./UserDropdown";
+import { useTheme } from "../../../context/ThemeContext";
 
 const Header = () => {
-    const isDark = false;
+    const { theme, toggleTheme } = useTheme();
     return (
         <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6">
             {/* Page Title */}
@@ -23,8 +24,9 @@ const Header = () => {
                     type="button"
                     className="rounded-md p-2 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
                     aria-label="Toggle theme"
+                    onClick={toggleTheme}
                 >
-                    {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                    {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
                 </button>
                 {/* Notifications */}
                 <button
