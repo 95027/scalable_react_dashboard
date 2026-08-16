@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import PageHeader from "../../components/ui/PageHeader";
 import DataTableToolbar from "../../components/ui/DataTable/DataTableToolbar";
@@ -6,74 +6,48 @@ import DataTable from "../../components/ui/DataTable/DataTable";
 
 
 import customerService from "../../services/customer.service";
-import { getErrorMessage } from "../../utils/error";
 
 import type {
-  Customer,
   CustomerQueryParams,
 } from "../../types/customer.types";
 
 import { customerColumns } from "./Components/customerColumns";
 import StatusFilter from "./Components/StatusFilter";
-import type { Pagination } from "../../types/api.types";
 import DataTablePagination from "../../components/ui/DataTable/DataTablePagination";
 import useDebounce from "../../hooks/useDebounce";
+import { useQuery } from "@tanstack/react-query";
+import { getErrorMessage } from "../../utils/error";
 
 export type CustomerStatus = "all" | "active" | "inactive";
 
 const CustomersPage = () => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
 
   const [search, setSearch] = useState("");
 
   const [status, setStatus] = useState<CustomerStatus>("all");
 
-  const [error, setError] = useState<string | null>(null);
 
-  const [pagination, setPagination] = useState<Pagination>({
+  const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
-    total: 0,
-    totalPages: 0,
   });
 
-  const [loading, setLoading] = useState(false);
   const debounceSearch = useDebounce(search, 500);
 
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        setLoading(true);
+  const params: CustomerQueryParams = {
+    page: pagination.page,
+    limit: pagination.limit,
+    search: debounceSearch || undefined,
+    isActive: status === "all" ? undefined : status === 'active',
+  }
 
-        const params: CustomerQueryParams = {
-          page: pagination.page,
-          limit: pagination.limit,
-          search: debounceSearch || undefined,
-          isActive:
-            status === "all"
-              ? undefined
-              : status === "active",
-        };
+  const { data, isError, isLoading, error } = useQuery({
+    queryKey: ["customers", params],
+    queryFn: () => customerService.getCustomers(params)
+  });
 
-        const { data: response } =
-          await customerService.getCustomers(params);
-
-        setCustomers(response.data);
-        setPagination(response.pagination);
-      } catch (error) {
-        setError(getErrorMessage(error));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCustomers();
-  }, [
-    pagination.page,
-    pagination.limit,
-    debounceSearch,
-    status,
-  ]);
+  const customers = data?.data?.data ?? [];
+  const responsePagination = data?.data?.pagination;
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -136,16 +110,16 @@ const CustomersPage = () => {
           data={customers}
           columns={customerColumns}
           getRowKey={(customer) => customer.id}
-          loading={loading}
+          loading={isLoading}
           emptyMessage="No customers found."
-          errorMessage={error}
+          errorMessage={isError && getErrorMessage(error)}
         />
 
         <DataTablePagination
-          page={pagination.page}
-          limit={pagination.limit}
-          total={pagination.total}
-          totalPages={pagination.totalPages}
+          page={responsePagination?.page ?? pagination.page}
+          limit={responsePagination?.limit ?? pagination.limit}
+          total={responsePagination?.total ?? 0}
+          totalPages={responsePagination?.totalPages ?? 0}
           onPageChange={handlePageChange}
           onLimitChange={handleLimitChange}
         />
