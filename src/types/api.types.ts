@@ -11,8 +11,8 @@ export interface PaginationParams {
 }
 
 export interface SortParams {
-  sortBy: string;
-  sortOrder: "asc" | "desc";
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 }
 
 export interface ApiListResponse<T> {
