@@ -8,8 +8,13 @@ const getCustomers = (params?: CustomerQueryParams) => {
   return api.get<CustomerListResponse>("/customer", { params });
 };
 
+const updateCustomerStatus = (id: number) => {
+  return api.patch(`/user/${id}/status`);
+};
+
 const customerService = {
   getCustomers,
+  updateCustomerStatus,
 };
 
 export default customerService;

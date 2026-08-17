@@ -7,16 +7,20 @@ import DataTable from "../../components/ui/DataTable/DataTable";
 
 import customerService from "../../services/customer.service";
 
-import type {
-  CustomerQueryParams,
+import {
+  type Customer,
+  type CustomerListResponse,
+  type CustomerQueryParams,
 } from "../../types/customer.types";
 
 import { customerColumns } from "./Components/customerColumns";
 import StatusFilter from "./Components/StatusFilter";
 import DataTablePagination from "../../components/ui/DataTable/DataTablePagination";
 import useDebounce from "../../hooks/useDebounce";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getErrorMessage } from "../../utils/error";
+import { toast } from "sonner";
+import type { AxiosResponse } from "axios";
 
 export type CustomerStatus = "all" | "active" | "inactive";
 
@@ -48,6 +52,52 @@ const CustomersPage = () => {
 
   const customers = data?.data?.data ?? [];
   const responsePagination = data?.data?.pagination;
+
+  const queryClient = useQueryClient();
+
+  const updateStatusMutation = useMutation({
+    mutationFn: (id: number) =>
+      customerService.updateCustomerStatus(id),
+
+    onSuccess: (res) => {
+      const updated = res.data.data;
+
+      queryClient.setQueriesData<AxiosResponse<CustomerListResponse>>(
+        {
+          queryKey: ["customers"],
+        },
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+
+            data: {
+              ...oldData.data,
+
+              data: oldData.data.data.map((customer) =>
+                customer.id === updated.id
+                  ? {
+                    ...customer,
+                    isActive: updated.isActive,
+                  }
+                  : customer
+              ),
+            },
+          };
+        }
+      );
+      toast.success(
+        updated.isActive
+          ? "Customer activated successfully."
+          : "Customer deactivated successfully."
+      );
+    },
+
+    onError: (error) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -82,6 +132,10 @@ const CustomersPage = () => {
     }));
   };
 
+  const handleStatusUpdate = (customer: Customer) => {
+    updateStatusMutation.mutate(customer.id);
+  }
+
   return (
     <div className="space-y-6">
 
@@ -108,7 +162,7 @@ const CustomersPage = () => {
 
         <DataTable
           data={customers}
-          columns={customerColumns}
+          columns={customerColumns({ onStatusChange: handleStatusUpdate, isUpdating: updateStatusMutation.isPending })}
           getRowKey={(customer) => customer.id}
           loading={isLoading}
           emptyMessage="No customers found."

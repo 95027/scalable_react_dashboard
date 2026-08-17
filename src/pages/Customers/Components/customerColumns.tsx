@@ -2,8 +2,14 @@ import { Eye } from "lucide-react";
 import Badge from "../../../components/ui/Badge";
 import type { DataTableColumn } from "../../../components/ui/DataTable/DataTable";
 import type { Customer } from "../../../types/customer.types";
+import ToogleSwitch from "../../../components/ui/ToggleSwitch";
 
-export const customerColumns: DataTableColumn<Customer>[] = [
+interface CustomerColumnProps {
+    onStatusChange: (customer: Customer) => void;
+    isUpdating: boolean;
+}
+
+export const customerColumns = ({ onStatusChange, isUpdating }: CustomerColumnProps): DataTableColumn<Customer>[] => [
     {
         key: "name",
         header: "Customer",
@@ -67,17 +73,7 @@ export const customerColumns: DataTableColumn<Customer>[] = [
         header: "Status",
 
         render: (customer) => (
-            <Badge
-                variant={
-                    customer.isActive
-                        ? "success"
-                        : "danger"
-                }
-            >
-                {customer.isActive
-                    ? "Active"
-                    : "Inactive"}
-            </Badge>
+            <ToogleSwitch checked={customer.isActive} disabled={isUpdating} onCheckedChange={() => onStatusChange(customer)} />
         ),
     },
 
