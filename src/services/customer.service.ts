@@ -2,14 +2,19 @@ import api from "../lib/axios";
 import type {
   CustomerListResponse,
   CustomerQueryParams,
+  CustomerResponse,
 } from "../types/customer.types";
 
-const getCustomers = (params?: CustomerQueryParams) => {
-  return api.get<CustomerListResponse>("/customer", { params });
+const getCustomers = async (
+  params?: CustomerQueryParams,
+): Promise<CustomerListResponse> => {
+  const response = await api.get<CustomerListResponse>("/customer", { params });
+  return response.data;
 };
 
-const updateCustomerStatus = (id: number) => {
-  return api.patch(`/user/${id}/status`);
+const updateCustomerStatus = async (id: number): Promise<CustomerResponse> => {
+  const response = await api.patch<CustomerResponse>(`/user/${id}/status`);
+  return response.data;
 };
 
 const customerService = {

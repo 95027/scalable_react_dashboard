@@ -1,20 +1,25 @@
 import api from "../lib/axios";
+import type { ApiMessageResponse, ApiResponse } from "../types/api.types";
+import type { User } from "../types/user.types";
 
 type LoginRequest = {
   email: string;
   password: string;
 };
 
-const login = (data: LoginRequest) => {
-  return api.post("/auth/login", data);
+const login = async (data: LoginRequest): Promise<ApiMessageResponse> => {
+  const res = await api.post<ApiMessageResponse>("/auth/login", data);
+  return res.data;
 };
 
-const getAuthUser = () => {
-  return api.get("/user/me");
+const getAuthUser = async (): Promise<ApiResponse<User>> => {
+  const res = await api.get<ApiResponse<User>>("/user/me");
+  return res.data;
 };
 
-const logout = () => {
-  return api.post("/auth/logout");
+const logout = async (): Promise<ApiMessageResponse> => {
+  const res = await api.post<ApiMessageResponse>("/auth/logout");
+  return res.data;
 };
 
 const authService = {

@@ -7,7 +7,7 @@ export const checkAuth = createAsyncThunk(
   async (__, { rejectWithValue }) => {
     try {
       const response = await authService.getAuthUser();
-      return response.data.data;
+      return response.data;
     } catch (error: unknown) {
       return rejectWithValue(getErrorMessage(error));
     }

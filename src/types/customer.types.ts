@@ -1,5 +1,6 @@
 import type {
   ApiListResponse,
+  ApiResponse,
   PaginationParams,
   SortParams,
 } from "./api.types";
@@ -26,3 +27,4 @@ export interface CustomerQueryParams extends PaginationParams, SortParams {
 }
 
 export type CustomerListResponse = ApiListResponse<Customer>;
+export type CustomerResponse = ApiResponse<Customer>;

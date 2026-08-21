@@ -4,7 +4,6 @@ import PageHeader from "../../components/ui/PageHeader";
 import DataTableToolbar from "../../components/ui/DataTable/DataTableToolbar";
 import DataTable from "../../components/ui/DataTable/DataTable";
 
-
 import customerService from "../../services/customer.service";
 
 import {
@@ -20,7 +19,6 @@ import useDebounce from "../../hooks/useDebounce";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getErrorMessage } from "../../utils/error";
 import { toast } from "sonner";
-import type { AxiosResponse } from "axios";
 
 export type CustomerStatus = "all" | "active" | "inactive";
 
@@ -50,8 +48,8 @@ const CustomersPage = () => {
     queryFn: () => customerService.getCustomers(params)
   });
 
-  const customers = data?.data?.data ?? [];
-  const responsePagination = data?.data?.pagination;
+  const customers = data?.data ?? [];
+  const responsePagination = data?.pagination;
 
   const queryClient = useQueryClient();
 
@@ -60,9 +58,9 @@ const CustomersPage = () => {
       customerService.updateCustomerStatus(id),
 
     onSuccess: (res) => {
-      const updated = res.data.data;
+      const updated = res.data;
 
-      queryClient.setQueriesData<AxiosResponse<CustomerListResponse>>(
+      queryClient.setQueriesData<CustomerListResponse>(
         {
           queryKey: ["customers"],
         },
@@ -71,19 +69,14 @@ const CustomersPage = () => {
 
           return {
             ...oldData,
-
-            data: {
-              ...oldData.data,
-
-              data: oldData.data.data.map((customer) =>
-                customer.id === updated.id
-                  ? {
-                    ...customer,
-                    isActive: updated.isActive,
-                  }
-                  : customer
-              ),
-            },
+            data: oldData.data.map((customer) =>
+              customer.id === updated.id
+                ? {
+                  ...customer,
+                  isActive: updated.isActive,
+                }
+                : customer
+            ),
           };
         }
       );

@@ -15,8 +15,20 @@ export interface SortParams {
   sortOrder?: "asc" | "desc";
 }
 
+export interface ApiMessageResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
 export interface ApiListResponse<T> {
   success: boolean;
   data: T[];
   pagination: Pagination;
+  message?: string;
 }

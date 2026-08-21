@@ -30,7 +30,7 @@ const LoginPage = () => {
 
     try {
       const res = await authService.login(formData);
-      if (res.data.success) {
+      if (res.success) {
         await dispatch(checkAuth()).unwrap();
         toast.success("Login successful...");
         navigate("/");
@@ -41,7 +41,6 @@ const LoginPage = () => {
     } finally {
       setIsLoading(false);
     }
-
 
   };
 
