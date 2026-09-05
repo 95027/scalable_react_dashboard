@@ -17,7 +17,7 @@ export const customerColumns = ({ onStatusChange, isUpdating }: CustomerColumnPr
         render: (customer) => (
             <div>
                 <p className="font-medium text-foreground">
-                    {customer.name}
+                    {customer.user.name}
                 </p>
 
                 <p className="text-xs text-muted-foreground">
@@ -33,7 +33,7 @@ export const customerColumns = ({ onStatusChange, isUpdating }: CustomerColumnPr
 
         render: (customer) => (
             <span className="text-foreground">
-                {customer.email}
+                {customer.user.email}
             </span>
         ),
     },
@@ -44,7 +44,7 @@ export const customerColumns = ({ onStatusChange, isUpdating }: CustomerColumnPr
 
         render: (customer) => (
             <span className="text-muted-foreground">
-                {customer.phone ?? "—"}
+                {customer.user.phone ?? "—"}
             </span>
         ),
     },
@@ -56,12 +56,12 @@ export const customerColumns = ({ onStatusChange, isUpdating }: CustomerColumnPr
         render: (customer) => (
             <Badge
                 variant={
-                    customer.emailVerified
+                    customer.user.emailVerified
                         ? "success"
                         : "warning"
                 }
             >
-                {customer.emailVerified
+                {customer.user.emailVerified
                     ? "Verified"
                     : "Unverified"}
             </Badge>
@@ -73,7 +73,7 @@ export const customerColumns = ({ onStatusChange, isUpdating }: CustomerColumnPr
         header: "Status",
 
         render: (customer) => (
-            <ToogleSwitch checked={customer.isActive} disabled={isUpdating} onCheckedChange={() => onStatusChange(customer)} />
+            <ToogleSwitch checked={customer.user.isActive} disabled={isUpdating} onCheckedChange={() => onStatusChange(customer)} />
         ),
     },
 

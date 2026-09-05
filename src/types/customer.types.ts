@@ -4,19 +4,13 @@ import type {
   PaginationParams,
   SortParams,
 } from "./api.types";
+import type { User } from "./user.types";
 
 export interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  emailVerified: boolean;
-  emailVerifiedAt: string | null;
-  phoneVerified: boolean;
-  phoneVerifiedAt: string | null;
-  lastLoginAt: string | null;
-  isActive: boolean;
+  id: string;
+  userId: string;
+  customerCode: string;
+  user: User;
   createdAt: string;
   updatedAt: string;
 }
@@ -27,4 +21,4 @@ export interface CustomerQueryParams extends PaginationParams, SortParams {
 }
 
 export type CustomerListResponse = ApiListResponse<Customer>;
-export type CustomerResponse = ApiResponse<Customer>;
+export type CustomerResponse = ApiResponse<User>;

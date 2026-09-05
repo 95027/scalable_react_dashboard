@@ -54,7 +54,7 @@ const CustomersPage = () => {
   const queryClient = useQueryClient();
 
   const updateStatusMutation = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: string) =>
       customerService.updateCustomerStatus(id),
 
     onSuccess: (res) => {
@@ -70,10 +70,13 @@ const CustomersPage = () => {
           return {
             ...oldData,
             data: oldData.data.map((customer) =>
-              customer.id === updated.id
+              customer.userId === updated.id
                 ? {
                   ...customer,
-                  isActive: updated.isActive,
+                  user: {
+                    ...customer.user,
+                    isActive: updated.isActive,
+                  }
                 }
                 : customer
             ),
@@ -126,7 +129,7 @@ const CustomersPage = () => {
   };
 
   const handleStatusUpdate = (customer: Customer) => {
-    updateStatusMutation.mutate(customer.id);
+    updateStatusMutation.mutate(customer.user.id);
   }
 
   return (

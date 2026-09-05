@@ -12,7 +12,7 @@ const getCustomers = async (
   return response.data;
 };
 
-const updateCustomerStatus = async (id: number): Promise<CustomerResponse> => {
+const updateCustomerStatus = async (id: string): Promise<CustomerResponse> => {
   const response = await api.patch<CustomerResponse>(`/user/${id}/status`);
   return response.data;
 };
