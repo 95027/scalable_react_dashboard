@@ -1,18 +1,47 @@
 import Dialog, { DialogClose } from "../../../components/ui/Dialog";
 import Button from "../../../components/ui/Button";
 import { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query";
+import customerService from "../../../services/customer.service";
+import { queryClient } from "../../../app/queryClient";
+import { toast } from "sonner";
+import { getErrorMessage } from "../../../utils/error";
+
+
+const addCustomerSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Enter a valid email"),
+    phone: z.string().min(10, "Phone must be at least 10 characters"),
+});
+
+type AddCustomerForm = z.infer<typeof addCustomerSchema>
 
 const AddCustomerModal = () => {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const submitHandler = (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<AddCustomerForm>({ resolver: zodResolver(addCustomerSchema) });
 
-        setTimeout(() => {
+    const createCustomerMutation = useMutation({
+        mutationFn: customerService.createCustomer,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["customers"]
+            });
+            reset();
             setIsOpen(false);
-        }, 3000);
+            toast.success("Customer created successfully.");
+        },
+        onError: (error) => {
+            toast.error(getErrorMessage(error));
+        }
+    })
 
+    const submitHandler: SubmitHandler<AddCustomerForm> = (data) => {
+        createCustomerMutation.mutate(data);
     }
 
     return (
@@ -27,7 +56,7 @@ const AddCustomerModal = () => {
                 </Button>
             }
         >
-            <form className="space-y-4" onSubmit={submitHandler}>
+            <form className="space-y-4" onSubmit={handleSubmit(submitHandler)}>
                 <div className="space-y-1">
                     <label
                         htmlFor="name"
@@ -38,7 +67,6 @@ const AddCustomerModal = () => {
 
                     <input
                         id="name"
-                        name="name"
                         type="text"
                         placeholder="Enter customer name"
                         className="
@@ -52,7 +80,15 @@ const AddCustomerModal = () => {
                             outline-none
                             focus:border-primary
                         "
+                        {...register("name")}
                     />
+                    {
+                        errors.name && (
+                            <p className="mt-1 text-xs text-danger">
+                                {errors.name.message}
+                            </p>
+                        )
+                    }
                 </div>
 
                 <div className="space-y-1">
@@ -65,7 +101,6 @@ const AddCustomerModal = () => {
 
                     <input
                         id="email"
-                        name="email"
                         type="email"
                         placeholder="Enter customer email"
                         className="
@@ -79,7 +114,13 @@ const AddCustomerModal = () => {
                             outline-none
                             focus:border-primary
                         "
+                        {...register("email")}
                     />
+                    {errors.email && (
+                        <p className="mt-1 text-xs text-danger">
+                            {errors.email.message}
+                        </p>
+                    )}
                 </div>
 
                 <div className="space-y-1">
@@ -92,7 +133,6 @@ const AddCustomerModal = () => {
 
                     <input
                         id="phone"
-                        name="phone"
                         type="tel"
                         placeholder="Enter phone number"
                         className="
@@ -106,7 +146,13 @@ const AddCustomerModal = () => {
                             outline-none
                             focus:border-primary
                         "
+                        {...register("phone")}
                     />
+                    {errors.phone && (
+                        <p className="mt-1 text-xs text-danger">
+                            {errors.phone.message}
+                        </p>
+                    )}
                 </div>
 
                 <div className="flex justify-end gap-2 pt-2">
@@ -119,7 +165,7 @@ const AddCustomerModal = () => {
                         </Button>
                     </DialogClose>
 
-                    <Button type="submit">
+                    <Button type="submit" disabled={createCustomerMutation.isPending}>
                         Submit
                     </Button>
                 </div>

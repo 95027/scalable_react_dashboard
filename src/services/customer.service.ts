@@ -1,5 +1,6 @@
 import api from "../lib/axios";
 import type {
+  CreateCustomerRequest,
   CustomerListResponse,
   CustomerQueryParams,
   CustomerResponse,
@@ -12,6 +13,13 @@ const getCustomers = async (
   return response.data;
 };
 
+const createCustomer = async (
+  data: CreateCustomerRequest,
+): Promise<CustomerResponse> => {
+  const response = await api.post<CustomerResponse>("/customer/create", data);
+  return response.data;
+};
+
 const updateCustomerStatus = async (id: string): Promise<CustomerResponse> => {
   const response = await api.patch<CustomerResponse>(`/user/${id}/status`);
   return response.data;
@@ -20,6 +28,7 @@ const updateCustomerStatus = async (id: string): Promise<CustomerResponse> => {
 const customerService = {
   getCustomers,
   updateCustomerStatus,
+  createCustomer,
 };
 
 export default customerService;

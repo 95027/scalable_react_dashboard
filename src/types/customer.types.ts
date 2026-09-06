@@ -22,3 +22,9 @@ export interface CustomerQueryParams extends PaginationParams, SortParams {
 
 export type CustomerListResponse = ApiListResponse<Customer>;
 export type CustomerResponse = ApiResponse<User>;
+
+export interface CreateCustomerRequest {
+  name: string;
+  email: string;
+  phone: string;
+}
