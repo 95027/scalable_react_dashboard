@@ -19,6 +19,7 @@ import useDebounce from "../../hooks/useDebounce";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getErrorMessage } from "../../utils/error";
 import { toast } from "sonner";
+import AddCustomerModal from "./Components/AddCustomerModal";
 
 export type CustomerStatus = "all" | "active" | "inactive";
 
@@ -138,6 +139,7 @@ const CustomersPage = () => {
       <PageHeader
         title="Customers"
         description="Manage and monitor your logistics customers."
+        actions={<AddCustomerModal />}
       />
 
       <div className="overflow-hidden rounded-lg border border-border bg-card">

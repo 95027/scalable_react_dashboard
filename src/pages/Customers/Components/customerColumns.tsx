@@ -21,7 +21,7 @@ export const customerColumns = ({ onStatusChange, isUpdating }: CustomerColumnPr
                 </p>
 
                 <p className="text-xs text-muted-foreground">
-                    #{customer.id}
+                    #{customer.customerCode}
                 </p>
             </div>
         ),
