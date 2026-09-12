@@ -3,7 +3,7 @@ import { store } from "../app/store";
 import { clearUser } from "../features/auth/authSlice";
 
 const api = axios.create({
-  baseURL: "api/v1",
+  baseURL: "/api/v1",
   withCredentials: true,
   timeout: 10000,
 });

@@ -13,6 +13,7 @@ const Navigation = () => {
                 <nav className="px-3 py-4">
                     <Accordion.Root
                         type="single"
+                        collapsible
                         className="space-y-2"
                     >
                         {NAVIGATION_ITEMS.map((item) => {

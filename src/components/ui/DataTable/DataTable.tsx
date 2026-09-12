@@ -57,7 +57,7 @@ const DataTable = <T,>({
                         </tr>) : (errorMessage ? (<tr>
                             <td
                                 colSpan={columns.length}
-                                className="px-5 py-10 text-center text-danger text-destructive"
+                                className="px-5 py-10 text-center text-danger"
                             >
                                 {errorMessage}
                             </td>
